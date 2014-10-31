@@ -46,8 +46,10 @@ module.exports = function(options) {
       .replace(reg, function (a, quote, b) {
         var filePath = path.resolve(path.join(alternatePath || options.path || mainPath, b));
 
-        if (options.staticRoot && filePath.indexOf(options.staticRoot) === 0) {
-          filePath = filePath.slice(options.staticRoot.length);
+        // remove staticRoot from path if it exists
+        var _index = filePath.indexOf(options.staticRoot);
+        if (options.staticRoot && _index !== -1) {
+          filePath = filePath.slice(0, _index) + filePath.slice(_index+options.staticRoot.length);
         }
 
         if (options.assetsDir)
