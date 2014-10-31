@@ -16,6 +16,8 @@ module.exports = function(options) {
   var endCondReg = /<!\[endif\]-->/gim;
   var basePath, mainPath, mainName, alternatePath;
 
+  options.staticRoot = options.staticRoot || "";
+
   function createFile(name, content) {
     var filePath = path.join(path.relative(basePath, mainPath), name)
       var isStatic = name.split('.').pop() === 'js' || name.split('.').pop() === 'css'
@@ -131,12 +133,12 @@ module.exports = function(options) {
             process(section[4], getFiles(section[5], jsReg), section[1], function(name, file) {
               push(file);
               if (path.extname(file.path) == '.js')
-                html.push('<script src="' + name.replace(path.basename(name), path.basename(file.path)) + '"></script>');
+                html.push('<script src="' + options.staticRoot + name.replace(path.basename(name), path.basename(file.path)) + '"></script>');
             }.bind(this, section[3]));
           } else {
             process(section[4], getFiles(section[5], cssReg), section[1], function(name, file) {
               push(file);
-              html.push('<link rel="stylesheet" href="' + name.replace(path.basename(name), path.basename(file.path)) + '"/>');
+              html.push('<link rel="stylesheet" href="' + options.staticRoot + name.replace(path.basename(name), path.basename(file.path)) + '"/>');
             }.bind(this, section[3]));
           }
         }
